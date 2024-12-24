@@ -73,5 +73,5 @@
     });
 
     // Delay để tránh webpage bị crash
-    setTimeout(processElements, 500);
+    setTimeout(processElements, 200);
 })();
