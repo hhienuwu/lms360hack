@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Show đáp án trắc nghiệm LMS360
 // @namespace    IDK
-// @version      2.0
+// @version      2.1
 // @description  Show đáp án trắc nghiệm LMS360
 // @author       IDK
 // @match        https://lms360.edu.vn/*
@@ -18,24 +18,22 @@
         isProcessing = true;
 
         try {
-            // Xử lý những answer sai (h5p-sc-is-wrong)
-            document.querySelectorAll('.h5p-sc-is-wrong').forEach(element => {
-                if (element.dataset.processed) return;
-                element.classList.remove('h5p-sc-is-wrong');
-                const label = element.querySelector('.h5p-sc-label');
-                if (label) {
-                    label.textContent = label.textContent.replace(/\./g, '');
-                }
-                element.dataset.processed = 'true';
-            });
-
-            // Xử lý những answer đúng (h5p-sc-is-corect)
-            document.querySelectorAll('.h5p-sc-is-correct .h5p-sc-label').forEach(label => {
+            // Only process wrong answers
+            document.querySelectorAll('.h5p-sc-is-wrong .h5p-sc-label').forEach(label => {
                 if (label.dataset.processed) return;
-                let text = label.textContent.replace(/\.+$/, '');
-                if (!text.endsWith('.')) {
-                    label.textContent = text + '.';
+
+                let text = label.textContent;
+                // If it's a single dot or empty, don't modify
+                if (text === '.' || text.trim() === '') {
+                    label.dataset.processed = 'true';
+                    return;
                 }
+
+                // Only remove the last character if it's a dot
+                if (text.charAt(text.length - 1) === '.') {
+                    label.textContent = text.substring(0, text.length - 1);
+                }
+
                 label.dataset.processed = 'true';
             });
         } catch (error) {
@@ -45,7 +43,7 @@
         isProcessing = false;
     }
 
-    // Debounce lại cái function để limit khi mà observer callback chạy lại
+    // Debounce function to limit how often the observer callback runs
     function debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -58,13 +56,13 @@
         };
     }
 
-    // Debounce lại processElements
-    const debouncedProcess = debounce(processElements, 100);
+    // Debounced version of processElements
+    const debouncedProcess = debounce(processElements, 10);
 
-    // Setup cái MutationObserver
+    // Set up a MutationObserver with more specific options
     const observer = new MutationObserver(debouncedProcess);
 
-    // Bắt đầu kiểm tra line code
+    // Start observing with more specific options
     observer.observe(document.body, {
         childList: true,
         subtree: true,
@@ -72,6 +70,6 @@
         attributeFilter: ['class']
     });
 
-    // Delay để tránh webpage bị crash
-    setTimeout(processElements, 200);
+    // Initial call
+    setTimeout(processElements, 100);
 })();
