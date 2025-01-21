@@ -1,14 +1,26 @@
 // ==UserScript==
-// @name         Show đáp án trắc nghiệm LMS360 
-// @namespace    IDK
-// @version      2.2
-// @description  Show đáp án trắc nghiệm LMS360
-// @author       IDK
-// @match        https://lms360.edu.vn/*
-// @grant        none
+// @name           Show đáp án trắc nghiệm LMS360
+// @name:en        Reveal multiple choice answer on LMS360
+// @name:vi        Show đáp án trắc nghiệm LMS360
+// @namespace      HiennNek/lms360hack
+// @version        2.2
+// @description:en Reveal multiple choice answer on LMS360
+// @description:vi Show đáp án trắc nghiệm LMS360
+// @author         HiennNek
+// @match          https://lms360.edu.vn/*
+// @grant          none
 // ==/UserScript==
 
+//⚠️ CHỈ PHỤC VỤ MỤC ĐÍNH NGHIÊN CỨU VÀ PHÁT HIỂN LỖ HỔNG BẢO MẬT
+//KHÔNG ĐƯỢC SỬ DỤNG CHO CÁC BÀI TẬP HOẶC BÀI KIỂM TRA TRÊN LMS360
+//TÔI SẼ KHÔNG CHỊU TRÁCH NHIỆM CHO CÁC HÀNH VI GIAN LẬN HAY BỊ PHÁT HIỆN, KỈ LUẬT DO SỬ DỤNG SCRIPT NÀY! ⚠️
+
+//⚠️ FOR RESEARCHING AND FINDING VULNERABILITY PURPOSES ONLY
+//DO NOT USE IT FOR HOMEWORK, ASSIGNMENT OR EXAM ON LMS360
+//I WILL NOT BE RESPONSIBLE FOR CHEATING OR BEING CAUGHT, DISCIPLINE FOR USING THIS SCRIPT! ⚠️
+
 // Lười viết chú thích cho code quá '-'
+// I'm so lazy to write down code comment '-'
 
 (function() {
     'use strict';
@@ -53,7 +65,7 @@
             timeout = setTimeout(later, wait);
         };
     }
-    
+
     const debouncedProcess = debounce(processElements, 10);
 
     const observer = new MutationObserver(debouncedProcess);
