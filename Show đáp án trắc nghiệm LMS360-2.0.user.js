@@ -1,12 +1,14 @@
 // ==UserScript==
-// @name         Show đáp án trắc nghiệm LMS360
+// @name         Show đáp án trắc nghiệm LMS360 
 // @namespace    IDK
-// @version      2.1
+// @version      2.2
 // @description  Show đáp án trắc nghiệm LMS360
 // @author       IDK
 // @match        https://lms360.edu.vn/*
 // @grant        none
 // ==/UserScript==
+
+// Lười viết chú thích cho code quá '-'
 
 (function() {
     'use strict';
@@ -18,18 +20,15 @@
         isProcessing = true;
 
         try {
-            // Only process wrong answers
             document.querySelectorAll('.h5p-sc-is-wrong .h5p-sc-label').forEach(label => {
                 if (label.dataset.processed) return;
 
                 let text = label.textContent;
-                // If it's a single dot or empty, don't modify
                 if (text === '.' || text.trim() === '') {
                     label.dataset.processed = 'true';
                     return;
                 }
 
-                // Only remove the last character if it's a dot
                 if (text.charAt(text.length - 1) === '.') {
                     label.textContent = text.substring(0, text.length - 1);
                 }
@@ -43,7 +42,6 @@
         isProcessing = false;
     }
 
-    // Debounce function to limit how often the observer callback runs
     function debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -55,14 +53,11 @@
             timeout = setTimeout(later, wait);
         };
     }
-
-    // Debounced version of processElements
+    
     const debouncedProcess = debounce(processElements, 10);
 
-    // Set up a MutationObserver with more specific options
     const observer = new MutationObserver(debouncedProcess);
 
-    // Start observing with more specific options
     observer.observe(document.body, {
         childList: true,
         subtree: true,
@@ -70,6 +65,5 @@
         attributeFilter: ['class']
     });
 
-    // Initial call
     setTimeout(processElements, 100);
 })();
