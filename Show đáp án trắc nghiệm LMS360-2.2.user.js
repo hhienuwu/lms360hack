@@ -34,17 +34,22 @@
         try {
             document.querySelectorAll('.h5p-sc-is-wrong .h5p-sc-label').forEach(label => {
                 if (label.dataset.processed) return;
-
                 let text = label.textContent;
-                if (text === '.' || text.trim() === '') {
-                    label.dataset.processed = 'true';
-                    return;
+                if (text.match(/[a-zA-Z0-9\u00C0-\u024F\u1E00-\u1EFF\s]\.$/) || text.match(/\s\.$/)) {
+                    text = text.slice(0, -1);
+                    label.textContent = text;
                 }
+                label.dataset.processed = 'true';
+            });
 
-                if (text.charAt(text.length - 1) === '.') {
-                    label.textContent = text.substring(0, text.length - 1);
+            document.querySelectorAll('.h5p-sc-is-correct .h5p-sc-label').forEach(label => {
+                if (label.dataset.processed) return;
+                let text = label.textContent;
+                if (text.match(/[a-zA-Z0-9\u00C0-\u024F\u1E00-\u1EFF\s]$/)) {
+                    if (!text.endsWith('.')) {
+                        label.textContent = text + '.';
+                    }
                 }
-
                 label.dataset.processed = 'true';
             });
         } catch (error) {
